@@ -43,7 +43,7 @@ appServer.get(
                 return true;
             }) // with .on('data'... ) instead of piping, it works.
             // .on('data', (data) => {
-            //     Response.write(data);
+            //     res.write(data);
             // })
             .pipe(res);
         //with pipe enabled && limited download speed, the route is not accessible until restarting app.js and it never gets into 'end' or 'finish' events
