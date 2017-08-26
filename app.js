@@ -6,7 +6,6 @@ const express = require('express');
 const projectId = 'my-project';//change this!!!
 
 const googleStorage = require('@google-cloud/storage')({
-    promise: Promise,
     projectId: projectId,
     keyFilename: path.join('storage-key.json')
 });
