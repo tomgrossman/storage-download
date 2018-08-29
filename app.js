@@ -1,5 +1,3 @@
-'use strict';
-
 const path = require('path');
 const express = require('express');
 
@@ -9,10 +7,10 @@ const googleStorage = require('@google-cloud/storage')({
     projectId: projectId,
     keyFilename: path.join('storage-key.json')
 });
-//change the projectId, bucket and file names to your accesible storage in order to reproduce.
-// the file I used is 2.3 GB sized and limited to 5 megabytes per second download speed
+//change the projectId, bucket and file names to your accessible storage in order to reproduce.
+// the file I used is 3.59 GB sized and limited to 5 megabytes per second download speed
 const bucket = googleStorage.bucket('my-bucket-project');
-const fileName = 'agent_ova/agent.ova';
+const fileName = 'agent_ova/appliance.ova';
 
 const appServer = express();
 
@@ -26,7 +24,7 @@ appServer.get(
         });
 
         let bucketFile = bucket.file(fileName);
-        bucketFile.createReadStream({validation: false})
+        bucketFile.createReadStream()
             .on('error', (err) => {
                 console.log(new Date() + ' error: ' + err.stack);
             })
@@ -41,12 +39,9 @@ appServer.get(
                 res.end();
 
                 return true;
-            }) // with .on('data'... ) instead of piping, it works.
-            // .on('data', (data) => {
-            //     res.write(data);
-            // })
+            })
             .pipe(res);
-        //with pipe enabled && limited download speed, the route is not accessible until restarting app.js and it never gets into 'end' or 'finish' events
+        //the route is not accessible until restarting app.js and it never gets into 'end' or 'finish' events
     }
 );
 
@@ -57,4 +52,3 @@ appServer.listen(
         console.log(new Date() + ' Listening on port 3000');
     }
 );
-
